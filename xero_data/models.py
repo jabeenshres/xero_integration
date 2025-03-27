@@ -1,13 +1,23 @@
 from django.db import models
 
 class XeroAccount(models.Model):
-    account_id = models.CharField(max_length=100, unique=True)
+    account_id = models.CharField(max_length=50, unique=True)  # Xero's AccountID
+    code = models.CharField(max_length=50, null=True, blank=True)  # Account Code
     name = models.CharField(max_length=255)
-    type = models.CharField(max_length=100)
-    status = models.CharField(max_length=50)
+    type = models.CharField(max_length=50)
+    tax_type = models.CharField(max_length=50, null=True, blank=True)
+    status = models.CharField(max_length=50, null=True, blank=True)  # ACTIVE/ARCHIVED
     description = models.TextField(null=True, blank=True)
-    tax_type = models.CharField(max_length=100, null=True, blank=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    class_type = models.CharField(max_length=50, null=True, blank=True)  # Account Class
+    system_account = models.CharField(max_length=50, null=True, blank=True)  # SYSTEM ACC
+    enable_payments_to_account = models.BooleanField(default=False)
+    show_in_expense_claims = models.BooleanField(default=False)
+    bank_account_type = models.CharField(max_length=50, null=True, blank=True)
+    reporting_code = models.CharField(max_length=50, null=True, blank=True)
+    reporting_code_name = models.CharField(max_length=255, null=True, blank=True)
+    has_attachments = models.BooleanField(default=False)
+    updated_date_utc = models.DateTimeField(null=True, blank=True)  # Xero's UpdatedDateUTC
+    add_to_watchlist = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.code})"
