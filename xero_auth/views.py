@@ -66,6 +66,7 @@ class XeroCallback(APIView):
             return Response({"error": "No tenant ID found"}, status=400)
 
         XeroToken.objects.update_or_create(
+            user = self.request.user,
             tenant_id=tenants[0]["tenantId"],
             defaults={
                 "access_token": token_data["access_token"],
@@ -85,4 +86,3 @@ class RefreshXeroTokenView(APIView):
             return Response({"error": "Failed to refresh token"}, status=401)
         return Response({"message": "Token refreshed successfully"})
 
-# Helper function optimization
