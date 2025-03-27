@@ -1,6 +1,11 @@
 import environ
+import os
+
 from pathlib import Path
 from datetime import timedelta
+from logging.config import dictConfig
+import logging.handlers  # Needed for RotatingFileHandler
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent  # For standard Django project structure
 
@@ -138,6 +143,7 @@ XERO_AUTH_URL = env('XERO_AUTH_URL')
 XERO_TOKEN_URL = env('XERO_TOKEN_URL')
 XERO_CONNECTIONS_URL = env('XERO_CONNECTIONS_URL')
 XERO_API_BASE_URL = env('XERO_API_BASE_URL')
+XERO_ACCOUNTS= env('XERO_ACCOUNTS')
 
 XERO_CONFIG = {
     'CLIENT_ID': env('XERO_CLIENT_ID'),
@@ -148,3 +154,68 @@ XERO_CONFIG = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/xero_auth.log'),
+            'maxBytes': 1024 * 1024 * 5,  # 5MB
+            'backupCount': 5,
+            'formatter': 'verbose'
+        },
+        'error_file': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/xero_auth_errors.log'),
+            'maxBytes': 1024 * 1024 * 5,  # 5MB
+            'backupCount': 5,
+            'formatter': 'verbose'
+        },
+    },
+    
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file', 'error_file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'xero_auth': {
+            'handlers': ['console', 'file', 'error_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+    
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'WARNING',
+    },
+}
+
+# Ensure logs directory exists
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
+# Initialize logging
+dictConfig(LOGGING)
