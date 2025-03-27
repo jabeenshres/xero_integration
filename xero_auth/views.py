@@ -48,3 +48,35 @@ class XeroCallback(APIView):
             },
         )
         return Response({"message": "Xero authentication successful"})
+
+
+class RefreshXeroTokenView(APIView):
+    def get(self, request):
+        token = XeroToken.objects.first()
+        if not token:
+            return Response({"error": "No Xero token found"}, status=400)
+
+        if token.expires_at > now():
+            return Response({"message": "Token is still valid", "access_token": token.access_token})
+
+        # Refresh token request
+        token_url = "https://identity.xero.com/connect/token"
+        data = {
+            "grant_type": "refresh_token",
+            "refresh_token": token.refresh_token,
+            "client_id": settings.XERO_CLIENT_ID,
+            "client_secret": settings.XERO_CLIENT_SECRET,
+        }
+        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+
+        response = requests.post(token_url, data=data, headers=headers)
+        if response.status_code != 200:
+            return Response({"error": "Failed to refresh token"}, status=response.status_code)
+
+        token_data = response.json()
+        token.access_token = token_data["access_token"]
+        token.refresh_token = token_data["refresh_token"]
+        token.expires_at = now() + timedelta(seconds=token_data["expires_in"])
+        token.save()
+
+        return Response({"message": "Token refreshed successfully", "access_token": token.access_token})
