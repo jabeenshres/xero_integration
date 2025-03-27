@@ -1,6 +1,18 @@
 from django.db import models
 
+
+from django.contrib.auth import get_user_model
+
+# Get logger instance
+
+User = get_user_model()
+
 class XeroAccount(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='account_data'
+    )
     account_id = models.CharField(max_length=50, unique=True)  # Xero's AccountID
     code = models.CharField(max_length=50, null=True, blank=True)  # Account Code
     name = models.CharField(max_length=255)
