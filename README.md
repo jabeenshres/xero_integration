@@ -66,7 +66,15 @@ Create a `.env` file in the project root:
 ```ini
 SECRET_KEY=your-django-secret-key
 DEBUG=True
-DATABASE_URL=postgres://user:password@localhost:5432/xero_db
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# Database
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=xero_integration
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_HOST=localhost
+DB_PORT=5432
 
 # Xero Configuration
 XERO_CLIENT_ID=your-client-id
@@ -76,6 +84,7 @@ XERO_SCOPES=openid profile email accounting.transactions accounting.settings
 XERO_AUTH_URL=https://login.xero.com/identity/connect/authorize
 XERO_TOKEN_URL=https://identity.xero.com/connect/token
 XERO_CONNECTIONS_URL=https://api.xero.com/connections
+XERO_API_BASE_URL=https://api.xero.com/api.xro/2.0
 XERO_ACCOUNTS_URL=https://api.xero.com/api.xro/2.0/Accounts
 ```
 
