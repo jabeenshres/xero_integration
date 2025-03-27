@@ -30,11 +30,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Third-party apps
-    'allauth',
-    'allauth.account',
+    'rest_framework',
 
 
-    # 'xero_auth',
+
+    'xero_auth',
 ]
 
 MIDDLEWARE = [
@@ -45,8 +45,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # Add these two for allauth
-    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'xero_integration.urls'
@@ -72,15 +70,7 @@ WSGI_APPLICATION = 'xero_integration.wsgi.application'
 # Authentication backends
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
 ]# Allauth settings
-
-SITE_ID = 1  # Required for allauth
-
-# Optional allauth settings
-ACCOUNT_EMAIL_VERIFICATION = 'none'  # Change as needed
-LOGIN_REDIRECT_URL = '/'  # Where to redirect after login
-LOGOUT_REDIRECT_URL = '/'  # Where to redirect after logout
 
 
 
