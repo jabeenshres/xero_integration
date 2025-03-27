@@ -1,7 +1,7 @@
 from django.urls import path
 from xero_auth.views import XeroLogin, XeroCallback, RefreshXeroTokenView
 
-app_name = 'xero-auth'
+app_name = 'xero_auth'
 
 urlpatterns = [
     path("login/", XeroLogin.as_view(), name="xero_login"),

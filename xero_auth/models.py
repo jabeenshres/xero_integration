@@ -4,16 +4,23 @@ from datetime import timedelta
 from django.utils.timezone import now
 from django.conf import settings
 from django.db import models
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 class XeroToken(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='xero_tokens'
+    )
+    tenant_id = models.CharField(max_length=255)
     access_token = models.TextField()
     refresh_token = models.TextField()
     expires_at = models.DateTimeField()
-    tenant_id = models.CharField(max_length=255)
 
-    def __str__(self):
-        return f"XeroToken for Tenant {self.tenant_id}"
+    class Meta:
+        unique_together = ('user', 'tenant_id')
     
     def refresh_token_if_needed(self):
         """Refresh the access token if it's expired"""

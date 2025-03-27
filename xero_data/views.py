@@ -6,7 +6,7 @@ import requests
 from xero_data.models import XeroAccount
 from xero_data.serializers import XeroAccountSerializer
 import datetime
-from xero_auth.helper import get_xero_tenant
+from xero_auth.helpers import get_xero_tenant
 
 
 # --- Helper functions (place these above your view class) ---
