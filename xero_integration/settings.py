@@ -35,6 +35,7 @@ INSTALLED_APPS = [
 
 
     'xero_auth',
+    'xero_data',
 ]
 
 MIDDLEWARE = [

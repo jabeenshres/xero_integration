@@ -67,6 +67,7 @@ class XeroCallback(APIView):
         )
 
         return Response({"message": "Xero authentication successful"})
+    
 class RefreshXeroTokenView(APIView):
     def get(self, request):
         access_token, tenant_id = get_xero_tenant()
