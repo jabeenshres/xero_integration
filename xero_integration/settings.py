@@ -1,6 +1,6 @@
 import environ
 from pathlib import Path
-
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent  # For standard Django project structure
 
@@ -31,9 +31,10 @@ INSTALLED_APPS = [
 
     # Third-party apps
     'rest_framework',
+    'rest_framework_simplejwt',
 
 
-
+    'authentication',
     'xero_auth',
     'xero_data',
 ]
@@ -73,8 +74,16 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]# Allauth settings
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
-
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+}
 
 # Database
 DATABASES = {
@@ -125,6 +134,10 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Xero Configuration
+XERO_AUTH_URL = env('XERO_CLIENT_ID')
+XERO_TOKEN_URL = env('XERO_TOKEN_URL')
+XERO_CONNECTIONS_URL = env('XERO_CONNECTIONS_URL')
+XERO_API_BASE_URL = env('XERO_API_BASE_URL')
 XERO_CONFIG = {
     'CLIENT_ID': env('XERO_CLIENT_ID'),
     'CLIENT_SECRET': env('XERO_CLIENT_SECRET'),
@@ -132,5 +145,5 @@ XERO_CONFIG = {
     'SCOPES': env('XERO_SCOPES').split(),
 }
 
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
